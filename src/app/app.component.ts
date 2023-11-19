@@ -1,9 +1,6 @@
-// src/app/app.component.ts
-
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Task } from './task.model';
 import { TaskService } from './task.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-root',
@@ -14,9 +11,7 @@ export class AppComponent implements OnInit {
   tasks: Task[] = [];
   newTask: Task = { id: 0, title: '', description: '', isActive: true, createdAt: new Date(), updatedAt: new Date() };
 
-  @ViewChild('updateModal') updateModal: any;
-
-  constructor(private taskService: TaskService, private modalService: NgbModal) {}
+  constructor(private taskService: TaskService) {}
 
   ngOnInit() {
     this.getTasks();
@@ -35,19 +30,14 @@ export class AppComponent implements OnInit {
     });
   }
 
-  openUpdateModal(task: Task) {
-    // Copy the values of the task to the newTask object
-    this.newTask = { ...task };
-    
-    // Open the Bootstrap modal
-    this.modalService.open(this.updateModal, { centered: true });
-  }
+  updateTask(task: Task) {
+    // Assuming you want to update the existing task with the new values
+    task.title = this.newTask.title;
+    task.description = this.newTask.description;
 
-  updateTask() {
-    this.taskService.updateTask(this.newTask).subscribe(() => {
+    this.taskService.updateTask(task).subscribe(() => {
       this.getTasks();
       this.resetNewTask();
-      this.modalService.dismissAll(); // Close the Bootstrap modal
     });
   }
 
